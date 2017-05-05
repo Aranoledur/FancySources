@@ -63,7 +63,7 @@ public struct CellDescriptor {
 open class BaseViewDataSource<Item>: NSObject {
     public var cellDescriptorCreator: ((Item, Int) -> CellDescriptor)!
     private var reuseIdentifiers: Set<String> = []
-    var displayedRows: [Item] = []
+    public var displayedRows: [Item] = []
 
     public init(items: [Item]) {
         super.init()
@@ -71,14 +71,14 @@ open class BaseViewDataSource<Item>: NSObject {
         displayedRows = items
     }
 
-    func registerIfNeeded(reuseIdentifier: String, closure: (Void) -> Void) {
+    public func registerIfNeeded(reuseIdentifier: String, closure: (Void) -> Void) {
         if !reuseIdentifiers.contains(reuseIdentifier) {
             closure()
             reuseIdentifiers.insert(reuseIdentifier)
         }
     }
 
-    func reload(newItems: [Item]) {
+    public func reload(newItems: [Item]) {
         displayedRows = newItems
     }
 
@@ -88,18 +88,18 @@ open class BaseViewDataSource<Item>: NSObject {
         return displayedRows[indexPath.row]
     }
 
-    final subscript(indexPath: IndexPath) -> Item {
+    public final subscript(indexPath: IndexPath) -> Item {
         return item(at: indexPath)
     }
 
-    final subscript(safe indexPath: IndexPath) -> Item? {
+    public final subscript(safe indexPath: IndexPath) -> Item? {
         if indexPath.row < displayedRows.count {
             return item(at: indexPath)
         }
         return nil
     }
 
-    final func remove(at indexPath: IndexPath) {
+    public final func remove(at indexPath: IndexPath) {
         displayedRows.remove(at: indexPath.row)
     }
 

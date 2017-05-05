@@ -8,25 +8,25 @@
 
 import UIKit
 
-protocol CollapsableDataModel: class {
+public protocol CollapsableDataModel: class {
     var isCollapsed: Bool { get set }
     var children: [Self] { get }
     var isHeader: Bool { get }
 }
 
-protocol CollapsableTableViewDataSourceDelegate: class {
+public protocol CollapsableTableViewDataSourceDelegate: class {
     func collapsableTableViewDataSource(_ dataSource: Any, willHideCellsAt indexPaths: [IndexPath], at tableView: UITableView)
 }
 
-class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableViewDataSource<Item> {
+open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableViewDataSource<Item> {
 
     weak var delegate: CollapsableTableViewDataSourceDelegate?
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) -> Bool {
+    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) -> Bool {
         return updateTableView(tableView, rowAt: indexPath)
     }
 
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) -> Bool {
+    open func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) -> Bool {
         return updateTableView(tableView, rowAt: indexPath)
     }
 
@@ -53,7 +53,7 @@ class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableViewDataS
         return true
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var count = 0
         for header in displayedRows {
             count += 1
@@ -92,7 +92,7 @@ class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableViewDataS
         return (0, nil)
     }
 
-    override func item(at indexPath: IndexPath) -> Item {
+    open override func item(at indexPath: IndexPath) -> Item {
         let indexes = indexesFor(indexPath: indexPath)
         if let childIndex = indexes.childIndex {
             return displayedRows[indexes.headerIndex].children[childIndex]

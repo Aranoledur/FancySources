@@ -9,17 +9,17 @@
 import Foundation
 import UIKit
 
-class CollectionViewDataSourceWithSections<Item, HeaderItem>: BaseViewDataSourceWithSections<Item, HeaderItem>, UICollectionViewDataSource {
+open class CollectionViewDataSourceWithSections<Item, HeaderItem>: BaseViewDataSourceWithSections<Item, HeaderItem>, UICollectionViewDataSource {
 
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    open func numberOfSections(in collectionView: UICollectionView) -> Int {
         return displayedRows.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return displayedRows[section].count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = self.item(at: indexPath)
         let descriptor = cellDescriptorCreator(item, indexPath)
         registerIfNeeded(reuseIdentifier: descriptor.reuseIdentifier) {
@@ -38,7 +38,7 @@ class CollectionViewDataSourceWithSections<Item, HeaderItem>: BaseViewDataSource
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 
         let item = sectionData(for: indexPath.section)
         let descriptor = headerDescriptorCreator(item, indexPath.section)

@@ -26,25 +26,25 @@ open class BaseViewDataSourceWithSections<Item, HeaderItem>: NSObject {
         }
     }
 
-    init(itemsWithSections: [[Item]], sectionsData: [HeaderItem]) {
+    public init(itemsWithSections: [[Item]], sectionsData: [HeaderItem]) {
         self.sectionsData = sectionsData
         displayedRows = itemsWithSections
         assert(sectionsData.count == itemsWithSections.count)
     }
 
-    func reload(itemsWithSections: [[Item]], sectionsData: [HeaderItem]) {
+    public func reload(itemsWithSections: [[Item]], sectionsData: [HeaderItem]) {
         displayedRows = itemsWithSections
         self.sectionsData = sectionsData
     }
 
-    func registerIfNeeded(reuseIdentifier: String, closure: (Void) -> Void) {
+    public func registerIfNeeded(reuseIdentifier: String, closure: (Void) -> Void) {
         if !reuseIdentifiers.contains(reuseIdentifier) {
             closure()
             reuseIdentifiers.insert(reuseIdentifier)
         }
     }
 
-    func registerIfNeededSupplementary(reuseIdentifier: String, closure: (Void) -> Void) {
+    public func registerIfNeededSupplementary(reuseIdentifier: String, closure: (Void) -> Void) {
         if !suplementaryReuseIdentifiers.contains(reuseIdentifier) {
             closure()
             suplementaryReuseIdentifiers.insert(reuseIdentifier)
@@ -59,11 +59,11 @@ open class BaseViewDataSourceWithSections<Item, HeaderItem>: NSObject {
         return displayedRows[indexPath.section][indexPath.row]
     }
 
-    final subscript(indexPath: IndexPath) -> Item {
+    public final subscript(indexPath: IndexPath) -> Item {
         return item(at: indexPath)
     }
 
-    final subscript(safe indexPath: IndexPath) -> Item? {
+    public final subscript(safe indexPath: IndexPath) -> Item? {
         if indexPath.section < displayedRows.count,
             indexPath.row < displayedRows[indexPath.section].count {
             return item(at: indexPath)

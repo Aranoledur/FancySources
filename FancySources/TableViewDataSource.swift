@@ -8,19 +8,19 @@
 
 import UIKit
 
-class TableViewDataSource<Item>: BaseViewDataSource<Item>, UITableViewDataSource {
+open class TableViewDataSource<Item>: BaseViewDataSource<Item>, UITableViewDataSource {
 
     // MARK: - UITableViewDS
 
-    func numberOfSections(in tableView: UITableView) -> Int {
+    open func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return displayedRows.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = self.item(at: indexPath)
         let descriptor = cellDescriptorCreator(item, indexPath.row)
         registerIfNeeded(reuseIdentifier: descriptor.reuseIdentifier) {
