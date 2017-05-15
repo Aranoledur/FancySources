@@ -7,15 +7,15 @@ Flexible and abstracted from UIKit data sources
 func didLoadEntities(entities: [SomeEntities]) {
     view?.hideSpinner()
         
-    let dataSource = FavouriteGamesModule.DataSourceType(items: entities)
+    let dataSource = DataSourceType(items: entities)
     view?.fill(with: dataSource)
 }
 
-func fill(with dataSource: CollectionViewDataSource<CouponGameEntity>) {
+func fill(with dataSource: DataSourceType) {
     dataSource.cellDescriptorCreator = {
         [weak self] item, index in
 
-        return CellDescriptor(nibName: String(describing: FavouriteGameCell.self), configure: {
+        return CellDescriptor(nibName: String(describing: SomeGameCell.self), configure: {
             (cell: FavouriteGameCell) in
 
             cell.fill(with: item)
