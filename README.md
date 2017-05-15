@@ -5,10 +5,10 @@ Flexible and abstracted from UIKit data sources
 
 ```swift
 func didLoadEntities(entities: [SomeEntities]) {
-    view?.hideSpinner()
+    hideSpinner()
         
     let dataSource = DataSourceType(items: entities)
-    view?.fill(with: dataSource)
+    fill(with: dataSource)
 }
 
 func fill(with dataSource: DataSourceType) {
