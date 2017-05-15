@@ -16,7 +16,7 @@ func fill(with dataSource: DataSourceType) {
         [weak self] item, index in
 
         return CellDescriptor(nibName: String(describing: SomeGameCell.self), configure: {
-            (cell: FavouriteGameCell) in
+            (cell: SomeGameCell) in
 
             cell.fill(with: item)
             cell.delegate = self
