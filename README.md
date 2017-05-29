@@ -1,5 +1,5 @@
 # FancySources
-Flexible and abstracted from UIKit data sources
+Flexible, generic and abstracted from UIKit data sources
 
 ## Usage example
 
