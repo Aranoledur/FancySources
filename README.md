@@ -4,9 +4,9 @@ Flexible, generic and abstracted from UIKit data sources
 ## Usage example
 
 ```swift
-func didLoadEntities(entities: [SomeEntities]) {
-    hideSpinner()
-        
+typealias DataSourceType = CollectionViewDataSource
+
+func didLoadEntities(entities: [SomeEntities]) {        
     let dataSource = DataSourceType(items: entities)
     fill(with: dataSource)
 }
