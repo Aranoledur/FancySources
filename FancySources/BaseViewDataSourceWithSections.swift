@@ -37,14 +37,14 @@ open class BaseViewDataSourceWithSections<Item, HeaderItem>: NSObject {
         self.sectionsData = sectionsData
     }
 
-    public func registerIfNeeded(reuseIdentifier: String, closure: (Void) -> Void) {
+    public func registerIfNeeded(reuseIdentifier: String, closure: VoidClosure) {
         if !reuseIdentifiers.contains(reuseIdentifier) {
             closure()
             reuseIdentifiers.insert(reuseIdentifier)
         }
     }
 
-    public func registerIfNeededSupplementary(reuseIdentifier: String, closure: (Void) -> Void) {
+    public func registerIfNeededSupplementary(reuseIdentifier: String, closure: VoidClosure) {
         if !suplementaryReuseIdentifiers.contains(reuseIdentifier) {
             closure()
             suplementaryReuseIdentifiers.insert(reuseIdentifier)
