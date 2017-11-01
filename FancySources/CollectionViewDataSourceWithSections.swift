@@ -23,13 +23,7 @@ open class CollectionViewDataSourceWithSections<Item, HeaderItem>: BaseViewDataS
         let item = self.item(at: indexPath)
         let descriptor = cellDescriptorCreator(item, indexPath)
         registerIfNeeded(reuseIdentifier: descriptor.reuseIdentifier) {
-            
-
-            if let cellNib = descriptor.cellNib {
-                collectionView.register(cellNib, forCellWithReuseIdentifier: descriptor.reuseIdentifier)
-            } else {
-                collectionView.register(descriptor.cellClass!, forCellWithReuseIdentifier: descriptor.reuseIdentifier)
-            }
+            collectionView.registerCell(descriptor)
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: descriptor.reuseIdentifier, for: indexPath)
@@ -43,14 +37,7 @@ open class CollectionViewDataSourceWithSections<Item, HeaderItem>: BaseViewDataS
         let item = sectionData(for: indexPath.section)
         let descriptor = headerDescriptorCreator(item, indexPath.section)
         registerIfNeededSupplementary(reuseIdentifier: descriptor.reuseIdentifier) {
-            () in
-
-            if let cellNib = descriptor.cellNib {
-                collectionView.register(cellNib, forSupplementaryViewOfKind: kind, withReuseIdentifier: descriptor.reuseIdentifier)
-            } else {
-                collectionView.register(descriptor.cellClass!, forSupplementaryViewOfKind: kind, withReuseIdentifier: descriptor.reuseIdentifier)
-            }
-
+            collectionView.registerSupplementary(descriptor, kind: kind)
         }
 
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: descriptor.reuseIdentifier, for: indexPath)

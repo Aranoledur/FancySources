@@ -23,13 +23,7 @@ open class TableViewDataSourceWithSections<Item, HeaderItem>: BaseViewDataSource
         let item = self.item(at: indexPath)
         let descriptor = cellDescriptorCreator(item, indexPath)
         registerIfNeeded(reuseIdentifier: descriptor.reuseIdentifier) {
-            
-
-            if let cellNib = descriptor.cellNib {
-                tableView.register(cellNib, forCellReuseIdentifier: descriptor.reuseIdentifier)
-            } else {
-                tableView.register(descriptor.cellClass!, forCellReuseIdentifier: descriptor.reuseIdentifier)
-            }
+            tableView.registerCell(descriptor)
         }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: descriptor.reuseIdentifier, for: indexPath)

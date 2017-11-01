@@ -10,15 +10,19 @@ import Foundation
 import UIKit
 
 public struct CellDescriptor {
-    let storyboardBasedCell: Bool
-    let cellNib: UINib?
-    let cellClass: UIView.Type?
+    
+    public enum DescriptorType {
+        case cellNib(UINib)
+        case cellClass(UIView.Type)
+        case prototypeReuseIdentifier
+    }
+    
+    let type: DescriptorType
     let reuseIdentifier: String
     let configure: (UIView) -> Void
     
     public init<Cell>(reuseIdentifier: String, cellNib: UINib, configure: @escaping (Cell) -> Void) {
-        self.storyboardBasedCell = false
-        self.cellNib = cellNib
+        self.type = .cellNib(cellNib)
         self.reuseIdentifier = reuseIdentifier
         self.configure = {
             cell in
@@ -26,7 +30,6 @@ public struct CellDescriptor {
             // swiftlint:disable:next force_cast
             configure(cell as! Cell)
         }
-        cellClass = nil
     }
     
     public init<Cell: UIView>(nibName: String, configure: @escaping (Cell) -> Void) {
@@ -36,8 +39,7 @@ public struct CellDescriptor {
     }
     
     public init<Cell: UIView>(reuseIdentifier: String, configure: @escaping (Cell) -> Void) {
-        self.storyboardBasedCell = false
-        self.cellClass = Cell.self
+        self.type = .cellClass(Cell.self)
         self.reuseIdentifier = reuseIdentifier
         self.configure = {
             cell in
@@ -45,11 +47,10 @@ public struct CellDescriptor {
             // swiftlint:disable:next force_cast
             configure(cell as! Cell)
         }
-        self.cellNib = nil
     }
     
     public init<Cell: UIView>(prototypeCellReuseIdentifier: String, configure: @escaping (Cell) -> Void) {
-        self.storyboardBasedCell = true
+        self.type = .prototypeReuseIdentifier
         self.reuseIdentifier = prototypeCellReuseIdentifier
         self.configure = {
             cell in
@@ -57,9 +58,6 @@ public struct CellDescriptor {
             // swiftlint:disable:next force_cast
             configure(cell as! Cell)
         }
-        self.cellNib = nil
-        self.cellClass = nil
     }
-    
 }
 

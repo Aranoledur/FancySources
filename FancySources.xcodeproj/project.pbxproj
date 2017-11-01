@@ -15,6 +15,7 @@
 		942BA7741EBC822B00F34262 /* CollapsableTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942BA76A1EBC822B00F34262 /* CollapsableTableViewDataSource.swift */; };
 		942BA7751EBC822B00F34262 /* CollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942BA76B1EBC822B00F34262 /* CollectionViewDataSource.swift */; };
 		942BA7761EBC822B00F34262 /* CollectionViewDataSourceWithSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 942BA76C1EBC822B00F34262 /* CollectionViewDataSourceWithSections.swift */; };
+		9442CC3B1FAA0164000B2317 /* DataSources+RegisterCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9442CC3A1FAA0164000B2317 /* DataSources+RegisterCells.swift */; };
 		946A02BB1FA9EA3A00E4CB2D /* CellDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946A02BA1FA9EA3A00E4CB2D /* CellDescriptor.swift */; };
 		946A02BD1FA9EA5100E4CB2D /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946A02BC1FA9EA5100E4CB2D /* Utils.swift */; };
 /* End PBXBuildFile section */
@@ -30,6 +31,7 @@
 		942BA76A1EBC822B00F34262 /* CollapsableTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsableTableViewDataSource.swift; sourceTree = "<group>"; };
 		942BA76B1EBC822B00F34262 /* CollectionViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSource.swift; sourceTree = "<group>"; };
 		942BA76C1EBC822B00F34262 /* CollectionViewDataSourceWithSections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSourceWithSections.swift; sourceTree = "<group>"; };
+		9442CC3A1FAA0164000B2317 /* DataSources+RegisterCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataSources+RegisterCells.swift"; sourceTree = "<group>"; };
 		946A02BA1FA9EA3A00E4CB2D /* CellDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellDescriptor.swift; sourceTree = "<group>"; };
 		946A02BC1FA9EA5100E4CB2D /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -74,6 +76,7 @@
 		942BA7651EBC821A00F34262 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				9442CC3A1FAA0164000B2317 /* DataSources+RegisterCells.swift */,
 				942BA7661EBC822B00F34262 /* BaseViewDataSource.swift */,
 				942BA7671EBC822B00F34262 /* BaseViewDataSourceWithSections.swift */,
 				942BA7681EBC822B00F34262 /* TableViewDataSource.swift */,
@@ -175,6 +178,7 @@
 				942BA7711EBC822B00F34262 /* BaseViewDataSourceWithSections.swift in Sources */,
 				942BA7731EBC822B00F34262 /* TableViewDataSourceWithSections.swift in Sources */,
 				942BA7761EBC822B00F34262 /* CollectionViewDataSourceWithSections.swift in Sources */,
+				9442CC3B1FAA0164000B2317 /* DataSources+RegisterCells.swift in Sources */,
 				946A02BB1FA9EA3A00E4CB2D /* CellDescriptor.swift in Sources */,
 				942BA7701EBC822B00F34262 /* BaseViewDataSource.swift in Sources */,
 			);

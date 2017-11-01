@@ -24,13 +24,7 @@ open class TableViewDataSource<Item>: BaseViewDataSource<Item>, UITableViewDataS
         let item = self.item(at: indexPath)
         let descriptor = cellDescriptorCreator(item, indexPath.row)
         registerIfNeeded(reuseIdentifier: descriptor.reuseIdentifier) {
-            
-            
-            if let cellNib = descriptor.cellNib {
-                tableView.register(cellNib, forCellReuseIdentifier: descriptor.reuseIdentifier)
-            } else if descriptor.storyboardBasedCell == false {
-                tableView.register(descriptor.cellClass!, forCellReuseIdentifier: descriptor.reuseIdentifier)
-            }
+            tableView.registerCell(descriptor)
         }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: descriptor.reuseIdentifier, for: indexPath)

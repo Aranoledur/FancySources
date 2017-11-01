@@ -28,12 +28,7 @@ open class CollectionViewDataSource<Item>: BaseViewDataSource<Item>, UICollectio
         let descriptor = cellDescriptorCreator(item, indexPath.row)
         registerIfNeeded(reuseIdentifier: descriptor.reuseIdentifier) {
             
-
-            if let cellNib = descriptor.cellNib {
-                collectionView.register(cellNib, forCellWithReuseIdentifier: descriptor.reuseIdentifier)
-            } else {
-                collectionView.register(descriptor.cellClass!, forCellWithReuseIdentifier: descriptor.reuseIdentifier)
-            }
+            collectionView.registerCell(descriptor)
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: descriptor.reuseIdentifier, for: indexPath)
