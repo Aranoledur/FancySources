@@ -10,7 +10,7 @@ import Foundation
 
 open class BaseViewDataSourceWithSections<Item, HeaderItem>: NSObject {
 
-    internal var displayedRows: [[Item]] = []
+    public var displayedRows: [[Item]] = []
 
     private var reuseIdentifiers: Set<String> = []
 
