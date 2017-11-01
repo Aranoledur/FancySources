@@ -15,12 +15,21 @@ func fill(with dataSource: DataSourceType) {
     dataSource.cellDescriptorCreator = {
         [weak self] item, index in
 
-        return CellDescriptor(nibName: String(describing: SomeGameCell.self), configure: {
-            (cell: SomeGameCell) in
+        if item.isGame {
+            return CellDescriptor(nibName: String(describing: SomeGameCell.self), configure: {
+                (cell: SomeGameCell) in
 
-            cell.fill(with: item)
-            cell.delegate = self
-        })
+                cell.fill(with: item)
+                cell.delegate = self
+            })
+        } else { //item.isChampionship
+            return CellDescriptor(reuseIdentifier: String(describing: SomeChampionshipCell.self), configure: {
+                (cell: SomeGameCell) in
+
+                cell.fill(with: item)
+                cell.delegate = self
+            })
+        }
     }
     collectionView.dataSource = dataSource
     collectionView.reloadData()
