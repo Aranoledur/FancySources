@@ -23,7 +23,7 @@ open class CollectionViewDataSourceWithSections<Item, HeaderItem>: BaseViewDataS
         let item = self.item(at: indexPath)
         let descriptor = cellDescriptorCreator(item, indexPath)
         registerIfNeeded(reuseIdentifier: descriptor.reuseIdentifier) {
-            (_) in
+            
 
             if let cellNib = descriptor.cellNib {
                 collectionView.register(cellNib, forCellWithReuseIdentifier: descriptor.reuseIdentifier)

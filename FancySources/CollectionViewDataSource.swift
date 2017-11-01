@@ -27,7 +27,7 @@ open class CollectionViewDataSource<Item>: BaseViewDataSource<Item>, UICollectio
         let item = self.item(at: indexPath)
         let descriptor = cellDescriptorCreator(item, indexPath.row)
         registerIfNeeded(reuseIdentifier: descriptor.reuseIdentifier) {
-            (_) in
+            
 
             if let cellNib = descriptor.cellNib {
                 collectionView.register(cellNib, forCellWithReuseIdentifier: descriptor.reuseIdentifier)
