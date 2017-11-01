@@ -6,12 +6,28 @@
 //  Copyright © 2016 easyverzilla. All rights reserved.
 //
 
+
 import UIKit
 
 public protocol CollapsableDataModel: class {
-    var isCollapsed: Bool { get set }
     var children: [Self] { get }
     var isHeader: Bool { get }
+    var hashString: String { get }
+}
+
+extension CollapsableDataModel {
+    public func visibleChildrenCount(_ collapseClosure: (Self) -> Bool) -> Int {
+        var count = 0
+        if isHeader &&
+            !collapseClosure(self) {
+            count += children.count
+            for i in children.indices {
+                count += children[i].visibleChildrenCount(collapseClosure)
+            }
+        }
+        
+        return count
+    }
 }
 
 public protocol CollapsableTableViewDataSourceDelegate: class {
@@ -19,85 +35,108 @@ public protocol CollapsableTableViewDataSourceDelegate: class {
 }
 
 open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableViewDataSource<Item> {
-
-    weak var delegate: CollapsableTableViewDataSourceDelegate?
-
-    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) -> Bool {
+    
+    public weak var delegate: CollapsableTableViewDataSourceDelegate?
+    
+    private(set) var collapseInfo: Set<String> = [] //set of hash strings
+    open var collapsedByDefault: Bool
+    
+    public init(items: [Item], collapsedByDefault: Bool) {
+        self.collapsedByDefault = collapsedByDefault
+        super.init(items: items)
+    }
+    
+    open func isCollapsed<Item: CollapsableDataModel>(_ item: Item) -> Bool {
+        if collapsedByDefault {
+            return !collapseInfo.contains(item.hashString)
+        } else {
+            return collapseInfo.contains(item.hashString)
+        }
+    }
+    
+    open func toggleCollapse<Item: CollapsableDataModel>(_ item: Item) {
+        if collapseInfo.contains(item.hashString) {
+            collapseInfo.remove(item.hashString)
+        } else {
+            collapseInfo.insert(item.hashString)
+        }
+    }
+    
+    @discardableResult
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) -> Bool {
         return updateTableView(tableView, rowAt: indexPath)
     }
-
-    open func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) -> Bool {
+    
+    @discardableResult
+    public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) -> Bool {
         return updateTableView(tableView, rowAt: indexPath)
     }
-
+    
     private func updateTableView(_ tableView: UITableView, rowAt indexPath: IndexPath) -> Bool {
-
+        
         let viewModel = item(at: indexPath)
         guard viewModel.isHeader,
             viewModel.children.count > 0 else {
-            return false
+                return false
         }
-
-        let range = indexPath.row+1...indexPath.row+viewModel.children.count
-        let indexPaths = range.map {return IndexPath(row: $0, section: indexPath.section)}
+        
+        let neededChildrenCount: Int
+        if isCollapsed(viewModel) {
+            neededChildrenCount = viewModel.children.count + viewModel.children.reduce(0, { $0 + $1.visibleChildrenCount(isCollapsed) })
+        } else {
+            neededChildrenCount = viewModel.visibleChildrenCount(isCollapsed)
+        }
+        let range = indexPath.row+1...indexPath.row+neededChildrenCount
+        let indexPaths = range.map { return IndexPath(row: $0, section: indexPath.section) }
         tableView.beginUpdates()
-        if viewModel.isCollapsed {
+        if isCollapsed(viewModel) {
             tableView.insertRows(at: indexPaths, with: .automatic)
         } else {
             delegate?.collapsableTableViewDataSource(self, willHideCellsAt: indexPaths, at: tableView)
             tableView.deleteRows(at: indexPaths, with: .top)
         }
-        viewModel.isCollapsed = !viewModel.isCollapsed
+        toggleCollapse(viewModel)
         tableView.reloadRows(at: [indexPath], with: .none)
         tableView.endUpdates()
         return true
     }
-
-    open override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var count = 0
-        for header in displayedRows {
+        for i in displayedRows.indices {
             count += 1
-            if !header.isCollapsed {
-                count += header.children.count
-            }
+            count += displayedRows[i].visibleChildrenCount(isCollapsed)
         }
         return count
     }
-
-    private func indexesFor(indexPath: IndexPath) -> (headerIndex: Int, childIndex: Int?) {
-        var row = 0
-        for (index, header) in displayedRows.enumerated() {
+    
+    open func element(in items: [Item], indexPath: IndexPath, row: inout Int) -> Item? {
+        
+        for i in items.indices {
             if row == indexPath.row {
-                return (index, nil)
-            }
-
-            if !header.isCollapsed {
-                if indexPath.row > row + header.children.count  {
-                    row += header.children.count
-                } else {
-                    for (childIndex, _) in header.children.enumerated() {
-                        row += 1
-
-                        if row == indexPath.row {
-                            return (index, childIndex)
-                        }
-                    }
-                }
+                return items[i]
             }
             
             row += 1
+            
+            if items[i].isHeader &&
+                !isCollapsed(items[i]) {
+                if let element = element(in: items[i].children, indexPath: indexPath, row: &row) {
+                    return element
+                }
+            }
         }
-
-        print("ERROR at \(#function): IndexPath.row is too big")
-        return (0, nil)
+        
+        return nil
     }
-
-    open override func item(at indexPath: IndexPath) -> Item {
-        let indexes = indexesFor(indexPath: indexPath)
-        if let childIndex = indexes.childIndex {
-            return displayedRows[indexes.headerIndex].children[childIndex]
-        } else {
-            return displayedRows[indexes.headerIndex]
-        }
+    
+    override open func item(at indexPath: IndexPath) -> Item {
+        
+        var row = 0
+        return element(in: displayedRows, indexPath: indexPath, row: &row)!
+    }
+    
+    override open func reload(newItems: [Item]) {
+        super.reload(newItems: newItems)
     }
 }

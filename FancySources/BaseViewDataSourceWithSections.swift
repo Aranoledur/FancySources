@@ -20,7 +20,7 @@ open class BaseViewDataSourceWithSections<Item, HeaderItem>: NSObject {
 
     public var headerDescriptorCreator: ((HeaderItem, Int) -> CellDescriptor)!
 
-    internal var sectionsData: [HeaderItem] {
+    public var sectionsData: [HeaderItem] {
         didSet {
             assert(sectionsData.count == displayedRows.count)
         }
@@ -63,7 +63,7 @@ open class BaseViewDataSourceWithSections<Item, HeaderItem>: NSObject {
         return item(at: indexPath)
     }
 
-    public final subscript(safe indexPath: IndexPath) -> Item? {
+    open subscript(safe indexPath: IndexPath) -> Item? {
         if indexPath.section < displayedRows.count,
             indexPath.row < displayedRows[indexPath.section].count {
             return item(at: indexPath)
