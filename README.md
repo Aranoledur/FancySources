@@ -26,8 +26,7 @@ func fill(with dataSource: DataSourceType) {
             return CellDescriptor(reuseIdentifier: String(describing: SomeChampionshipCell.self), configure: {
                 (cell: SomeGameCell) in
 
-                cell.fill(with: item)
-                cell.delegate = self
+                cell.setChampionship(item)
             })
         }
     }
