@@ -39,7 +39,7 @@ func fill(with dataSource: DataSourceType) {
     collectionView.reloadData()
 }"
   s.homepage     = "https://github.com/Aranoledur/FancySources"
-  s.license      = "MIT"
+  s.license      = { :type => 'MIT', :file => "LICENSE" }
   s.author       = { "Nikolay Ischuk" => "nk13.666@gmail.com" }
   s.platform     = :ios, "8.0"
   s.source       = { :git => "https://github.com/Aranoledur/FancySources.git", :tag => "v#{s.version}" }
