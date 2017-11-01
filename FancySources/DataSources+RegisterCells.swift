@@ -16,7 +16,7 @@ extension UITableView {
             register(cellNib, forCellReuseIdentifier: descriptor.reuseIdentifier)
         case .cellClass(let cellType):
             register(cellType, forCellReuseIdentifier: descriptor.reuseIdentifier)
-        case .prototypeReuseIdentifier:
+        case .prototypeCell:
             break
         }
     }
@@ -29,7 +29,7 @@ extension UICollectionView {
             register(cellNib, forCellWithReuseIdentifier: descriptor.reuseIdentifier)
         case .cellClass(let cellType):
             register(cellType, forCellWithReuseIdentifier: descriptor.reuseIdentifier)
-        case .prototypeReuseIdentifier:
+        case .prototypeCell:
             break
         }
     }
@@ -40,7 +40,7 @@ extension UICollectionView {
             register(cellNib, forSupplementaryViewOfKind: kind, withReuseIdentifier: descriptor.reuseIdentifier)
         case .cellClass(let cellType):
             register(cellType, forSupplementaryViewOfKind: kind, withReuseIdentifier: descriptor.reuseIdentifier)
-        case .prototypeReuseIdentifier:
+        case .prototypeCell:
             break
         }
     }

@@ -14,7 +14,7 @@ public struct CellDescriptor {
     public enum DescriptorType {
         case cellNib(UINib)
         case cellClass(UIView.Type)
-        case prototypeReuseIdentifier
+        case prototypeCell
     }
     
     let type: DescriptorType
@@ -50,7 +50,7 @@ public struct CellDescriptor {
     }
     
     public init<Cell: UIView>(prototypeCellReuseIdentifier: String, configure: @escaping (Cell) -> Void) {
-        self.type = .prototypeReuseIdentifier
+        self.type = .prototypeCell
         self.reuseIdentifier = prototypeCellReuseIdentifier
         self.configure = {
             cell in
