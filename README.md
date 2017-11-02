@@ -49,13 +49,13 @@ func didUpdateItem(_ updatedItem: Item) {
     view.updatePath(path)
 }
 ```
-And because this method implemented for base class, all subclasses will have it too. So you don't have to rewrite or copy/past it before switching from TableViewDataSource to CollectionViewDataSource or your own subclass. Even if you have 2-3 views in your project that shows same data, but in different style, still you can use this method.
+And because this method implemented for a base class, all subclasses will have it too. So you don't have to rewrite or copy/past it before switching from TableViewDataSource to CollectionViewDataSource or your own subclass. Even if you have 2-3 views in your project that shows same data, but in the different style, still you can use this method.
 
 ## Generic
 Interface for base class is `class BaseViewDataSourceWithSections<Item, HeaderItem> {}`, so you can put any data you want to this data sources. Even some wrappers or enums that can contains various data.
 
 ## Abstracted from UIKit
-No one is implementing UITableViewDelegate/UICollectionViewDelegate here. It's up to you, so you can do it in your own way. Data sources only care about data, visual implementation is incapsulated to `descriptorCreator`s. So when you deal with data source you don't need to know how this data is displayed, you have to know only how items are structured. Visual part (cells) can be implemented by someone else, another class or another developer.
+No one is implementing UITableViewDelegate/UICollectionViewDelegate here. It's up to you, so you can do it in your own way. Data sources only care about data, visual implementation is encapsulated to `descriptorCreator`s. So when you deal with data source you don't need to know how this data is displayed, you have to know only how items are structured. Visual part (cells) can be implemented by someone else, another class or another developer.
 
 ## Easy to use
 20 lines of code from usage example is the only thing you have to write to fill table or collection view. 
