@@ -17,16 +17,20 @@ public protocol CollapsableDataModel: class {
 
 extension CollapsableDataModel {
     public func visibleChildrenCount(_ collapseClosure: (Self) -> Bool) -> Int {
-        var count = 0
+        return visibleChildren(collapseClosure).count
+    }
+    
+    public func visibleChildren(_ collapseClosure: (Self) -> Bool) -> [Self] {
+        var result: [Self] = []
         if isHeader &&
             !collapseClosure(self) {
-            count += children.count
+            result.append(contentsOf: children)
             for i in children.indices {
-                count += children[i].visibleChildrenCount(collapseClosure)
+                result.append(contentsOf: children[i].visibleChildren(collapseClosure))
             }
         }
         
-        return count
+        return result
     }
 }
 
