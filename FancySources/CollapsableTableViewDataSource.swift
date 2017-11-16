@@ -19,7 +19,7 @@ extension CollapsableDataModel {
     public func visibleChildrenCount(_ collapseClosure: (Self) -> Bool) -> Int {
         return visibleChildren(collapseClosure).count
     }
-    
+
     public func visibleChildren(_ collapseClosure: (Self) -> Bool) -> [Self] {
         var result: [Self] = []
         if isHeader &&
@@ -29,7 +29,7 @@ extension CollapsableDataModel {
                 result.append(contentsOf: children[i].visibleChildren(collapseClosure))
             }
         }
-        
+
         return result
     }
 }
@@ -44,6 +44,7 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
     
     private(set) var collapseInfo: Set<String> = [] //set of hash strings
     open var collapsedByDefault: Bool
+    public var hasAnimation: Bool = false
     
     public init(items: [Item], collapsedByDefault: Bool) {
         self.collapsedByDefault = collapsedByDefault
@@ -94,10 +95,10 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
         let indexPaths = range.map { return IndexPath(row: $0, section: indexPath.section) }
         tableView.beginUpdates()
         if isCollapsed(viewModel) {
-            tableView.insertRows(at: indexPaths, with: .automatic)
+            tableView.insertRows(at: indexPaths, with: (hasAnimation ? .automatic : .none))
         } else {
             delegate?.collapsableTableViewDataSource(self, willHideCellsAt: indexPaths, at: tableView)
-            tableView.deleteRows(at: indexPaths, with: .top)
+            tableView.deleteRows(at: indexPaths, with: (hasAnimation ? .top : .none))
         }
         toggleCollapse(viewModel)
         tableView.reloadRows(at: [indexPath], with: .none)
