@@ -93,14 +93,15 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
         }
         let range = indexPath.row+1...indexPath.row+neededChildrenCount
         let indexPaths = range.map { return IndexPath(row: $0, section: indexPath.section) }
+        let wasCollapsed = isCollapsed(viewModel)
         tableView.beginUpdates()
-        if isCollapsed(viewModel) {
+        toggleCollapse(viewModel)
+        if wasCollapsed {
             tableView.insertRows(at: indexPaths, with: (hasAnimation ? .automatic : .none))
         } else {
             delegate?.collapsableTableViewDataSource(self, willHideCellsAt: indexPaths, at: tableView)
             tableView.deleteRows(at: indexPaths, with: (hasAnimation ? .top : .none))
         }
-        toggleCollapse(viewModel)
         tableView.reloadRows(at: [indexPath], with: .none)
         tableView.endUpdates()
         return true
