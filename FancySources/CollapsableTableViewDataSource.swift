@@ -22,10 +22,11 @@ extension CollapsableDataModel {
 
     public func visibleChildren(_ collapseClosure: (Self) -> Bool) -> [Self] {
         var result: [Self] = []
+        result.reserveCapacity(children.count * 2)
         if isHeader &&
             !collapseClosure(self) {
-            result.append(contentsOf: children)
             for i in children.indices {
+                result.append(children[i])
                 result.append(contentsOf: children[i].visibleChildren(collapseClosure))
             }
         }
@@ -103,46 +104,31 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
             tableView.deleteRows(at: indexPaths, with: (hasAnimation ? .top : .none))
         }
         tableView.reloadRows(at: [indexPath], with: .none)
+        visibleChildren.removeValue(forKey: indexPath.section)
         tableView.endUpdates()
         return true
     }
-    
-    override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var count = 0
-        for i in displayedRows.indices {
-            count += 1
-            count += displayedRows[i].visibleChildrenCount(isCollapsed)
-        }
-        return count
+
+    open override func numberOfSections(in tableView: UITableView) -> Int {
+        return displayedRows.count
     }
     
-    open func element(in items: [Item], indexPath: IndexPath, row: inout Int) -> Item? {
-        
-        for i in items.indices {
-            if row == indexPath.row {
-                return items[i]
-            }
-            
-            row += 1
-            
-            if items[i].isHeader &&
-                !isCollapsed(items[i]) {
-                if let element = element(in: items[i].children, indexPath: indexPath, row: &row) {
-                    return element
-                }
-            }
-        }
-        
-        return nil
+    override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return visibleChildren(for: section).count + 1
     }
     
     override open func item(at indexPath: IndexPath) -> Item {
-        
-        var row = 0
-        return element(in: displayedRows, indexPath: indexPath, row: &row)!
+
+        let section = indexPath.section
+        if indexPath.row == 0 {
+            return displayedRows[section]
+        }
+        return visibleChildren(for: section)[indexPath.row - 1]
     }
-    
-    override open func reload(newItems: [Item]) {
-        super.reload(newItems: newItems)
+
+    private var visibleChildren: [Int: [Item]] = [:]
+
+    private func visibleChildren(for section: Int) -> [Item] {
+        return visibleChildren[section, default: displayedRows[section].visibleChildren(isCollapsed)]
     }
 }
