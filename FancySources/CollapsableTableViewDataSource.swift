@@ -87,10 +87,19 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
         }
         
         let neededChildrenCount: Int
+        let neededVisibleChildren: [Item]
         if isCollapsed(viewModel) {
-            neededChildrenCount = viewModel.children.count + viewModel.children.reduce(0, { $0 + $1.visibleChildrenCount(isCollapsed) })
+            var visibleSubschildren: [Item] = []
+            visibleSubschildren.reserveCapacity(viewModel.children.count * 2)
+            for i in viewModel.children.indices {
+                visibleSubschildren.append(viewModel.children[i])
+                visibleSubschildren.append(contentsOf: viewModel.children[i].visibleChildren(isCollapsed))
+            }
+            neededVisibleChildren = visibleSubschildren
+            neededChildrenCount = neededVisibleChildren.count
         } else {
-            neededChildrenCount = viewModel.visibleChildrenCount(isCollapsed)
+            neededVisibleChildren = viewModel.visibleChildren(isCollapsed)
+            neededChildrenCount = neededVisibleChildren.count
         }
         let range = indexPath.row+1...indexPath.row+neededChildrenCount
         let indexPaths = range.map { return IndexPath(row: $0, section: indexPath.section) }
@@ -99,12 +108,15 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
         toggleCollapse(viewModel)
         if wasCollapsed {
             tableView.insertRows(at: indexPaths, with: (hasAnimation ? .automatic : .none))
+            visibleChildren[indexPath.section]?.insert(contentsOf: neededVisibleChildren,
+                                                       at: indexPath.row)
         } else {
             delegate?.collapsableTableViewDataSource(self, willHideCellsAt: indexPaths, at: tableView)
             tableView.deleteRows(at: indexPaths, with: (hasAnimation ? .top : .none))
+            let removeSubrange = indexPath.row...indexPath.row+neededChildrenCount-1
+            visibleChildren[indexPath.section]?.removeSubrange(removeSubrange)
         }
         tableView.reloadRows(at: [indexPath], with: .none)
-        visibleChildren.removeValue(forKey: indexPath.section)
         tableView.endUpdates()
         return true
     }
@@ -129,6 +141,9 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
     private var visibleChildren: [Int: [Item]] = [:]
 
     private func visibleChildren(for section: Int) -> [Item] {
-        return visibleChildren[section, default: displayedRows[section].visibleChildren(isCollapsed)]
+        if visibleChildren[section] == nil {
+            visibleChildren[section] = displayedRows[section].visibleChildren(isCollapsed)
+        }
+        return visibleChildren[section] ?? []
     }
 }
