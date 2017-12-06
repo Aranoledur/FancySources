@@ -88,24 +88,19 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
         
         let neededChildrenCount: Int
         let neededVisibleChildren: [Item]
-        if isCollapsed(viewModel) {
-            var visibleSubschildren: [Item] = []
-            visibleSubschildren.reserveCapacity(viewModel.children.count * 2)
-            for i in viewModel.children.indices {
-                visibleSubschildren.append(viewModel.children[i])
-                visibleSubschildren.append(contentsOf: viewModel.children[i].visibleChildren(isCollapsed))
-            }
-            neededVisibleChildren = visibleSubschildren
+        let wasCollapsed = isCollapsed(viewModel)
+        if wasCollapsed {
+            toggleCollapse(viewModel)
+            neededVisibleChildren = viewModel.visibleChildren(isCollapsed)
             neededChildrenCount = neededVisibleChildren.count
         } else {
             neededVisibleChildren = viewModel.visibleChildren(isCollapsed)
             neededChildrenCount = neededVisibleChildren.count
+            toggleCollapse(viewModel)
         }
         let range = indexPath.row+1...indexPath.row+neededChildrenCount
         let indexPaths = range.map { return IndexPath(row: $0, section: indexPath.section) }
-        let wasCollapsed = isCollapsed(viewModel)
         tableView.beginUpdates()
-        toggleCollapse(viewModel)
         if wasCollapsed {
             tableView.insertRows(at: indexPaths, with: (hasAnimation ? .automatic : .none))
             visibleChildren[indexPath.section]?.insert(contentsOf: neededVisibleChildren,
@@ -136,6 +131,11 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
             return displayedRows[section]
         }
         return visibleChildren(for: section)[indexPath.row - 1]
+    }
+
+    open override func reload(newItems: [Item]) {
+        super.reload(newItems: newItems)
+        visibleChildren.removeAll()
     }
 
     private var visibleChildren: [Int: [Item]] = [:]
