@@ -60,12 +60,17 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
         }
     }
     
-    open func toggleCollapse<Item: CollapsableDataModel>(_ item: Item) {
+    private func toggleCollapse<Item: CollapsableDataModel>(_ item: Item) {
         if collapseInfo.contains(item.hashString) {
             collapseInfo.remove(item.hashString)
         } else {
             collapseInfo.insert(item.hashString)
         }
+    }
+
+    public func toggleCollapse<Item: CollapsableDataModel>(_ item: Item, section: Int) {
+        toggleCollapse(item)
+        visibleChildren.removeValue(forKey: section)
     }
     
     @discardableResult
@@ -135,6 +140,14 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
 
     open override func reload(newItems: [Item]) {
         super.reload(newItems: newItems)
+        visibleChildren.removeAll()
+    }
+
+    public func recalculateChildren(forSection section: Int) {
+        visibleChildren.removeValue(forKey: section)
+    }
+
+    public func recalculateChildren() {
         visibleChildren.removeAll()
     }
 
