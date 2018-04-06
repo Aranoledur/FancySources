@@ -6,7 +6,6 @@
 //  Copyright © 2016 easyverzilla. All rights reserved.
 //
 
-
 import UIKit
 
 public protocol CollapsableDataModel: class {
@@ -74,12 +73,12 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
     }
     
     @discardableResult
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) -> Bool {
+    open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) -> Bool {
         return updateTableView(tableView, rowAt: indexPath)
     }
     
     @discardableResult
-    public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) -> Bool {
+    open func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) -> Bool {
         return updateTableView(tableView, rowAt: indexPath)
     }
     
@@ -153,7 +152,7 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
 
     private var visibleChildren: [Int: [Item]] = [:]
 
-    private func visibleChildren(for section: Int) -> [Item] {
+    public func visibleChildren(for section: Int) -> [Item] {
         if visibleChildren[section] == nil {
             visibleChildren[section] = displayedRows[section].visibleChildren(isCollapsed)
         }
