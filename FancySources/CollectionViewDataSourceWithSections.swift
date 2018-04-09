@@ -20,7 +20,13 @@ open class CollectionViewDataSourceWithSections<Item, HeaderItem>: BaseViewDataS
     }
 
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let item = self.item(at: indexPath)
+        registerIfNeeded(reuseIdentifier: SharedData.fakeCellIdentifier) {
+            collectionView.fs_registerFakeCell()
+        }
+        guard let item = self.item(at: indexPath) else {
+            return collectionView.dequeueReusableCell(withReuseIdentifier: SharedData.fakeCellIdentifier, for: indexPath)
+        }
+
         let descriptor = cellDescriptorCreator(item, indexPath)
         registerIfNeeded(reuseIdentifier: descriptor.reuseIdentifier) {
             collectionView.registerCell(descriptor)
@@ -33,8 +39,15 @@ open class CollectionViewDataSourceWithSections<Item, HeaderItem>: BaseViewDataS
     }
 
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-
-        let item = sectionData(for: indexPath.section)
+        registerIfNeeded(reuseIdentifier: SharedData.fakeCellIdentifier) {
+            collectionView.fs_registerFakeSupplementary(of: kind)
+        }
+        guard let item = sectionData(for: indexPath.section) else {
+            return collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                   withReuseIdentifier: SharedData.fakeCellIdentifier,
+                                                                   for: indexPath)
+        }
+        
         let descriptor = headerDescriptorCreator(item, indexPath.section)
         registerIfNeededSupplementary(reuseIdentifier: descriptor.reuseIdentifier) {
             collectionView.registerSupplementary(descriptor, kind: kind)

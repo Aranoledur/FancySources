@@ -84,8 +84,8 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
     
     private func updateTableView(_ tableView: UITableView, rowAt indexPath: IndexPath) -> Bool {
         
-        let viewModel = item(at: indexPath)
-        guard viewModel.isHeader,
+        guard let viewModel = item(at: indexPath),
+            viewModel.isHeader,
             viewModel.children.count > 0 else {
                 return false
         }
@@ -128,13 +128,13 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
         return visibleChildren(for: section).count + 1
     }
     
-    override open func item(at indexPath: IndexPath) -> Item {
+    override open func item(at indexPath: IndexPath) -> Item? {
 
         let section = indexPath.section
         if indexPath.row == 0 {
-            return displayedRows[section]
+            return displayedRows[safe: section]
         }
-        return visibleChildren(for: section)[indexPath.row - 1]
+        return visibleChildren(for: section)[safe: indexPath.row - 1]
     }
 
     open override func reload(newItems: [Item]) {

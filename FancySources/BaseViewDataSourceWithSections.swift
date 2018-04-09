@@ -51,23 +51,15 @@ open class BaseViewDataSourceWithSections<Item, HeaderItem>: NSObject {
         }
     }
 
-    open func sectionData(for section: Int) -> HeaderItem {
-        return sectionsData[section]
+    open func sectionData(for section: Int) -> HeaderItem? {
+        return sectionsData[safe: section]
     }
 
-    open func item(at indexPath: IndexPath) -> Item {
-        return displayedRows[indexPath.section][indexPath.row]
+    open func item(at indexPath: IndexPath) -> Item? {
+        return displayedRows[safe: indexPath.section]?[safe: indexPath.row]
     }
 
-    public final subscript(indexPath: IndexPath) -> Item {
+    public final subscript(indexPath: IndexPath) -> Item? {
         return item(at: indexPath)
-    }
-
-    open subscript(safe indexPath: IndexPath) -> Item? {
-        if indexPath.section < displayedRows.count,
-            indexPath.row < displayedRows[indexPath.section].count {
-            return item(at: indexPath)
-        }
-        return nil
     }
 }

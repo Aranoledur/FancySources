@@ -20,7 +20,13 @@ open class TableViewDataSourceWithSections<Item, HeaderItem>: BaseViewDataSource
     }
 
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let item = self.item(at: indexPath)
+        registerIfNeeded(reuseIdentifier: SharedData.fakeCellIdentifier) {
+            tableView.fs_registerFakeCell()
+        }
+        guard let item = self.item(at: indexPath) else {
+            return tableView.dequeueReusableCell(withIdentifier: SharedData.fakeCellIdentifier, for: indexPath)
+        }
+
         let descriptor = cellDescriptorCreator(item, indexPath)
         registerIfNeeded(reuseIdentifier: descriptor.reuseIdentifier) {
             tableView.registerCell(descriptor)

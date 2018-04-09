@@ -35,21 +35,14 @@ open class BaseViewDataSource<Item>: NSObject {
     
     // MARK: - Getting data
     
-    open func item(at indexPath: IndexPath) -> Item {
-        return displayedRows[indexPath.row]
+    open func item(at indexPath: IndexPath) -> Item? {
+        return displayedRows[safe: indexPath.row]
     }
     
-    public final subscript(indexPath: IndexPath) -> Item {
+    public final subscript(indexPath: IndexPath) -> Item? {
         return item(at: indexPath)
     }
-    
-    open subscript(safe indexPath: IndexPath) -> Item? {
-        if indexPath.row < displayedRows.count {
-            return item(at: indexPath)
-        }
-        return nil
-    }
-    
+
     open func remove(at indexPath: IndexPath) {
         displayedRows.remove(at: indexPath.row)
     }

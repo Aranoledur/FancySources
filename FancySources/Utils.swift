@@ -9,3 +9,10 @@
 import Foundation
 
 public typealias VoidClosure = () -> ()
+
+extension Collection {
+
+    internal subscript(safe i: Index) -> Iterator.Element? {
+        return (self.startIndex ..< self.endIndex).contains(i) ? self[i] : nil
+    }
+}

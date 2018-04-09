@@ -24,10 +24,16 @@ open class CollectionViewDataSource<Item>: BaseViewDataSource<Item>, UICollectio
     }
 
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let item = self.item(at: indexPath)
+        registerIfNeeded(reuseIdentifier: SharedData.fakeCellIdentifier) {
+            collectionView.fs_registerFakeCell()
+        }
+        guard let item = self.item(at: indexPath) else {
+            return collectionView.dequeueReusableCell(withReuseIdentifier: SharedData.fakeCellIdentifier, for: indexPath)
+        }
+
         let descriptor = cellDescriptorCreator(item, indexPath.row)
         registerIfNeeded(reuseIdentifier: descriptor.reuseIdentifier) {
-            
+
             collectionView.registerCell(descriptor)
         }
 
