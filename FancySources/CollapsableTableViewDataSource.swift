@@ -104,19 +104,37 @@ open class CollapsableTableViewDataSource<Item: CollapsableDataModel>: TableView
         }
         let range = indexPath.row+1...indexPath.row+neededChildrenCount
         let indexPaths = range.map { return IndexPath(row: $0, section: indexPath.section) }
-        tableView.beginUpdates()
-        if wasCollapsed {
-            tableView.insertRows(at: indexPaths, with: (hasAnimation ? .automatic : .none))
-            visibleChildren[indexPath.section]?.insert(contentsOf: neededVisibleChildren,
-                                                       at: indexPath.row)
-        } else {
-            delegate?.collapsableTableViewDataSource(self, willHideCellsAt: indexPaths, at: tableView)
-            tableView.deleteRows(at: indexPaths, with: (hasAnimation ? .top : .none))
-            let removeSubrange = indexPath.row...indexPath.row+neededChildrenCount-1
-            visibleChildren[indexPath.section]?.removeSubrange(removeSubrange)
+
+        let updatesClosure: VoidClosure = {
+            [weak self] in
+
+            guard let sself = self else {
+                return
+            }
+
+            tableView.beginUpdates()
+            if wasCollapsed {
+                tableView.insertRows(at: indexPaths, with: (sself.hasAnimation ? .automatic : .none))
+                sself.visibleChildren[indexPath.section]?.insert(contentsOf: neededVisibleChildren,
+                                                                 at: indexPath.row)
+            } else {
+                sself.delegate?.collapsableTableViewDataSource(sself, willHideCellsAt: indexPaths, at: tableView)
+                tableView.deleteRows(at: indexPaths, with: (sself.hasAnimation ? .top : .none))
+                let removeSubrange = indexPath.row...indexPath.row + neededChildrenCount - 1
+                sself.visibleChildren[indexPath.section]?.removeSubrange(removeSubrange)
+            }
+            tableView.reloadRows(at: [indexPath], with: .none)
+            tableView.endUpdates()
         }
-        tableView.reloadRows(at: [indexPath], with: .none)
-        tableView.endUpdates()
+
+        if hasAnimation {
+            updatesClosure()
+        } else {
+            UIView.performWithoutAnimation {
+                updatesClosure()
+            }
+        }
+
         return true
     }
 
